@@ -1,0 +1,15 @@
+app: postgres-admin
+domain: {{domain}}
+image: adminer:latest
+port: 8080
+env:
+  ADMINER_DEFAULT_SERVER: postgres-admin-db
+accessories:
+  db:
+    image: postgres:16
+    port: 5432
+    env:
+      POSTGRES_PASSWORD: generate
+      POSTGRES_DB: postgres_admin
+    volumes:
+      data: /var/lib/postgresql/data

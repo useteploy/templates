@@ -1,0 +1,20 @@
+app: wordpress
+domain: {{domain}}
+image: wordpress:latest
+port: 80
+env:
+  WORDPRESS_DB_HOST: wordpress-db
+  WORDPRESS_DB_NAME: wordpress
+  WORDPRESS_DB_USER: wordpress
+  WORDPRESS_DB_PASSWORD: {{db_password}}
+accessories:
+  db:
+    image: mysql:8
+    port: 3306
+    env:
+      MYSQL_ROOT_PASSWORD: generate
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: {{db_password}}
+    volumes:
+      data: /var/lib/mysql

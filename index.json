@@ -1,0 +1,14 @@
+[
+  {
+    "name": "postgres-admin",
+    "description": "PostgreSQL 16 with Adminer web UI for browsing/managing the database",
+    "accessories": ["postgres"],
+    "variables": ["domain"]
+  },
+  {
+    "name": "wordpress",
+    "description": "WordPress with a MySQL 8 database accessory",
+    "accessories": ["mysql"],
+    "variables": ["domain", "db_password"]
+  }
+]
