@@ -12,7 +12,9 @@ Ship repository is private and its first public release is pending. Until the
 image exists, `install` fails at the pull step.
 
 **Flip sequence (maintainers):** publish the image (`deploy/build-image.sh
---push` in the teploy-ship repo), then add this entry to `index.json`:
+--push` in the teploy-ship repo), add this entry to `index.json`, and
+redeploy teploy-site (its /ship page copy is committed and waiting —
+`teploy-site@3887f5d`):
 
 ```json
 {
