@@ -1,0 +1,79 @@
+# Teploy Ship — self-hosted coding agent (issues in, verified PRs out)
+#
+# One worker image, two processes: `web` (dashboard + webhook receivers) and
+# `worker` (executes durable runs — needs the model + git credentials).
+# Nucleus runs as an accessory on the app's private network (alias
+# `ship-nucleus`), so web and worker share one store and you can approve runs
+# from your laptop while the worker carries them.
+#
+# No domain: `ingress: host` publishes the dashboard directly at
+# <server-ip>:7460 — the shape for a private/Tailnet box. Gate the port with
+# your firewall (e.g. `ufw allow from 100.64.0.0/10 to any port 7460` for
+# Tailscale-only access).
+#
+# Install:
+#   teploy template install teploy-ship --server <name> [--port 7460]
+#
+# Three secrets are generated at install and printed ONCE (save them):
+#   SHIP_WEB_TOKEN       dashboard login + API bearer
+#   SHIP_WEBHOOK_SECRET  Forgejo/GitHub webhook HMAC
+#   SHIP_SESSION_SECRET  signs dashboard sessions
+#
+# Then complete worker wiring with `teploy secret set` (cannot be generated —
+# they are YOUR credentials):
+#   SHIP_GIT_TOKENS={"https://git.example.com":"<deploy-token>"}   repos it may clone/push
+#   AI_GATEWAY_KEY=<key>        (or ANTHROPIC_API_KEY — drop AI_GATEWAY_URL if direct)
+#   SHIP_SANDBOX_TOKEN=<cred>   if you run the teploy-sandbox daemon for repo runs
+# Sandbox daemon is reached at the docker bridge gateway by default; adjust
+# SHIP_SANDBOX_URL to wherever yours runs, and SHIP_SANDBOX_IMAGE to an image
+# matching your repositories' toolchains.
+#
+# Per-repo evidence (which test command / which Observe service belongs to
+# which repo) is set AFTER install, on the running instance:
+#   teploy-ship evidence set <owner/repo> --test-command "go test ./..."
+app: ship
+ingress: host
+port: 7460
+platform: linux/amd64
+image: ghcr.io/useteploy/teploy-ship:stable
+memory: 1g
+
+processes:
+  web: web --store nucleus --port 7460
+  worker: worker --store nucleus --interval 5
+
+accessories:
+  nucleus:
+    # PINNED, not :latest — a storage engine is the last thing that should
+    # change underneath you unannounced. Bump deliberately.
+    image: ghcr.io/neutron-build/nucleus:v0.1.8
+    port: 5432
+    # Cgroup cap, set above the engine budget below so the engine's graceful
+    # eviction runs first and the kernel cap is only the backstop.
+    memory: 1500m
+    env:
+      # Password auth is not usable in Nucleus yet; the accessory is only
+      # reachable on the app's private docker network. Same posture as every
+      # teploy app that ships a Nucleus accessory.
+      NUCLEUS_ALLOW_NO_AUTH: "1"
+      NUCLEUS_ALLOW_INSECURE_CLUSTER: "1"
+      NUCLEUS_ALLOW_INSECURE_REPLICATION: "1"
+      NUCLEUS_MAX_MEMORY_MB: "1024"
+    volumes:
+      nucleus-data: /data
+
+env:
+  NUCLEUS_URL: postgres://nucleus@ship-nucleus:5432/nucleus
+  SHIP_MODEL: anthropic/claude-sonnet-5
+  SHIP_WEB_TOKEN: generate
+  SHIP_WEBHOOK_SECRET: generate
+  SHIP_SESSION_SECRET: generate
+  # Route model calls through teploy-gateway (deploy it as its own app), or
+  # unset this and provide ANTHROPIC_API_KEY to call providers directly.
+  AI_GATEWAY_URL: http://ship-gateway:8089
+  SHIP_SANDBOX_URL: http://172.18.0.1:7439
+  SHIP_SANDBOX_IMAGE: golang:1.24
+  SHIP_SANDBOX_NETWORK: egress
+
+volumes:
+  ship-data: /data
