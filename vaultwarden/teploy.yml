@@ -1,0 +1,16 @@
+# Vaultwarden — Bitwarden-compatible password manager server.
+# ADMIN_TOKEN is generated at install and printed ONCE — save it. It logs you
+# into https://<domain>/admin. Set SIGNUPS_ALLOWED to "false" after you have
+# created your accounts.
+app: vaultwarden
+domain: {{domain}}
+image: vaultwarden/server:latest
+port: 80
+health:
+  path: /alive
+env:
+  DOMAIN: https://{{domain}}
+  ADMIN_TOKEN: generate
+  SIGNUPS_ALLOWED: "true"
+volumes:
+  data: /data

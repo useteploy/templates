@@ -1,0 +1,36 @@
+# Nextcloud — self-hosted files, sync, and sharing.
+# First boot installs Nextcloud into the data volume (takes a minute or two).
+# NEXTCLOUD_ADMIN_PASSWORD is generated at install and printed ONCE.
+app: nextcloud
+domain: {{domain}}
+image: nextcloud:apache
+port: 80
+health:
+  path: /status.php
+  timeout_seconds: 240
+env:
+  NEXTCLOUD_ADMIN_USER: admin
+  NEXTCLOUD_ADMIN_PASSWORD: generate
+  NEXTCLOUD_TRUSTED_DOMAINS: {{domain}}
+  OVERWRITEPROTOCOL: https
+  OVERWRITECLIURL: https://{{domain}}
+  POSTGRES_HOST: nextcloud-db
+  POSTGRES_DB: nextcloud
+  POSTGRES_USER: nextcloud
+  POSTGRES_PASSWORD: {{db_password}}
+  REDIS_HOST: nextcloud-redis
+volumes:
+  data: /var/www/html
+accessories:
+  db:
+    image: postgres:16
+    port: 5432
+    env:
+      POSTGRES_DB: nextcloud
+      POSTGRES_USER: nextcloud
+      POSTGRES_PASSWORD: {{db_password}}
+    volumes:
+      data: /var/lib/postgresql/data
+  redis:
+    image: valkey/valkey:8
+    port: 6379

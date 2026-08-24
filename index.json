@@ -2,13 +2,83 @@
   {
     "name": "postgres-admin",
     "description": "PostgreSQL 16 with Adminer web UI for browsing/managing the database",
-    "accessories": ["postgres"],
-    "variables": ["domain"]
+    "accessories": [
+      "postgres"
+    ],
+    "variables": [
+      "domain"
+    ]
   },
   {
     "name": "wordpress",
     "description": "WordPress with a MySQL 8 database accessory",
-    "accessories": ["mysql"],
-    "variables": ["domain", "db_password"]
+    "accessories": [
+      "mysql"
+    ],
+    "variables": [
+      "domain",
+      "db_password"
+    ]
+  },
+  {
+    "name": "immich",
+    "description": "Immich photo/video backup (Google Photos replacement) with postgres, valkey, and machine-learning accessories",
+    "accessories": [
+      "postgres",
+      "valkey",
+      "machine-learning"
+    ],
+    "variables": [
+      "domain",
+      "db_password"
+    ]
+  },
+  {
+    "name": "nextcloud",
+    "description": "Nextcloud file sync and sharing with postgres and valkey accessories",
+    "accessories": [
+      "postgres",
+      "valkey"
+    ],
+    "variables": [
+      "domain",
+      "db_password"
+    ]
+  },
+  {
+    "name": "paperless-ngx",
+    "description": "Paperless-ngx document archive (OCR, tagging, search) with postgres and valkey accessories",
+    "accessories": [
+      "postgres",
+      "valkey"
+    ],
+    "variables": [
+      "domain",
+      "db_password"
+    ]
+  },
+  {
+    "name": "jellyfin",
+    "description": "Jellyfin media server for movies, TV, and music",
+    "accessories": [],
+    "variables": [
+      "domain"
+    ]
+  },
+  {
+    "name": "vaultwarden",
+    "description": "Vaultwarden password manager (Bitwarden-compatible server)",
+    "accessories": [],
+    "variables": [
+      "domain"
+    ]
+  },
+  {
+    "name": "home-assistant",
+    "description": "Home Assistant home automation hub (see README: trusted-proxy step required after first deploy)",
+    "accessories": [],
+    "variables": [
+      "domain"
+    ]
   }
-]
+]\n

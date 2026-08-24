@@ -1,0 +1,39 @@
+# Immich — self-hosted photo and video backup (Google Photos replacement).
+# Three accessories: postgres (Immich's own image with vector extensions),
+# valkey, and the machine-learning container (smart search, face grouping).
+# First boot runs migrations + model download; health timeout is generous.
+app: immich
+domain: {{domain}}
+image: ghcr.io/immich-app/immich-server:release
+port: 2283
+health:
+  path: /api/server/ping
+  timeout_seconds: 240
+env:
+  DB_HOSTNAME: immich-db
+  DB_USERNAME: immich
+  DB_PASSWORD: {{db_password}}
+  DB_DATABASE_NAME: immich
+  REDIS_HOSTNAME: immich-redis
+  IMMICH_MACHINE_LEARNING_URL: http://immich-ml:3003
+volumes:
+  upload: /data
+accessories:
+  db:
+    image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0
+    port: 5432
+    env:
+      POSTGRES_USER: immich
+      POSTGRES_PASSWORD: {{db_password}}
+      POSTGRES_DB: immich
+      POSTGRES_INITDB_ARGS: --data-checksums
+    volumes:
+      data: /var/lib/postgresql/data
+  redis:
+    image: valkey/valkey:9
+    port: 6379
+  ml:
+    image: ghcr.io/immich-app/immich-machine-learning:release
+    port: 3003
+    volumes:
+      cache: /cache

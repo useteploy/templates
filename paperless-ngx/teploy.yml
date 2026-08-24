@@ -1,0 +1,41 @@
+# Paperless-ngx — scan, index, and archive your paper documents.
+# First boot runs database migrations; the generous health timeout covers it.
+# PAPERLESS_ADMIN_PASSWORD is generated at install and printed ONCE — it is
+# the login for the `admin` user.
+app: paperless
+domain: {{domain}}
+image: ghcr.io/paperless-ngx/paperless-ngx:latest
+port: 8000
+health:
+  timeout_seconds: 240
+env:
+  PAPERLESS_URL: https://{{domain}}
+  PAPERLESS_SECRET_KEY: generate
+  PAPERLESS_ADMIN_USER: admin
+  PAPERLESS_ADMIN_PASSWORD: generate
+  PAPERLESS_DBENGINE: postgresql
+  PAPERLESS_DBHOST: paperless-db
+  PAPERLESS_DBNAME: paperless
+  PAPERLESS_DBUSER: paperless
+  PAPERLESS_DBPASS: {{db_password}}
+  PAPERLESS_REDIS: redis://paperless-redis:6379
+volumes:
+  data: /usr/src/paperless/data
+  media: /usr/src/paperless/media
+  export: /usr/src/paperless/export
+  consume: /usr/src/paperless/consume
+accessories:
+  db:
+    image: postgres:16
+    port: 5432
+    env:
+      POSTGRES_DB: paperless
+      POSTGRES_USER: paperless
+      POSTGRES_PASSWORD: {{db_password}}
+    volumes:
+      data: /var/lib/postgresql/data
+  redis:
+    image: valkey/valkey:8
+    port: 6379
+    volumes:
+      data: /data
