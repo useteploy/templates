@@ -22,7 +22,9 @@
 # Then complete worker wiring with `teploy secret set` (cannot be generated —
 # they are YOUR credentials):
 #   SHIP_GIT_TOKENS={"https://git.example.com":"<deploy-token>"}   repos it may clone/push
-#   AI_GATEWAY_KEY=<key>        (or ANTHROPIC_API_KEY — drop AI_GATEWAY_URL if direct)
+#   ANTHROPIC_API_KEY=<key>     model credential, called directly. To route
+#                               through teploy-gateway instead, set
+#                               AI_GATEWAY_URL + AI_GATEWAY_KEY.
 #   SHIP_SANDBOX_URL + SHIP_SANDBOX_TOKEN   only if you run the teploy-sandbox
 #                               daemon; unset, the worker runs repo commands in
 #                               its own container. Setting a URL without a token
@@ -69,9 +71,10 @@ env:
   SHIP_WEB_TOKEN: generate
   SHIP_WEBHOOK_SECRET: generate
   SHIP_SESSION_SECRET: generate
-  # Route model calls through teploy-gateway (deploy it as its own app), or
-  # unset this and provide ANTHROPIC_API_KEY to call providers directly.
-  AI_GATEWAY_URL: http://ship-gateway:8089
+  # To route model calls through teploy-gateway (deployed as its own app)
+  # instead of calling the provider directly, set both:
+  # AI_GATEWAY_URL: http://ship-gateway:8089
+  # AI_GATEWAY_KEY: <key>
   # Sandbox daemon (optional) — e.g. the docker bridge gateway:
   # SHIP_SANDBOX_URL: http://172.18.0.1:7439
   # SHIP_SANDBOX_IMAGE: golang:1.24
