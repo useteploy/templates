@@ -1,0 +1,8 @@
+# Full-Text RSS (FiveFilters) — turns truncated feeds into full-content feeds.
+# Point it at any feed URL; it returns the same feed with complete articles.
+app: fulltext-rss
+domain: {{domain}}
+image: heussd/fivefilters-full-text-rss:latest
+port: 80
+health:
+  timeout_seconds: 60

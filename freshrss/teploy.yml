@@ -1,0 +1,13 @@
+# FreshRSS — self-hosted RSS reader/aggregator (SQLite by default).
+app: freshrss
+domain: {{domain}}
+image: freshrss/freshrss:latest
+port: 80
+health:
+  timeout_seconds: 60
+env:
+  CRON_MIN: "13,43"
+  TZ: UTC
+volumes:
+  data: /var/www/FreshRSS/data
+  extensions: /var/www/FreshRSS/extensions

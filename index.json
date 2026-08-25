@@ -131,5 +131,29 @@
     "variables": [
       "domain"
     ]
+  },
+  {
+    "name": "freshrss",
+    "description": "FreshRSS reader/aggregator (SQLite, built-in refresh cron)",
+    "accessories": [],
+    "variables": [
+      "domain"
+    ]
+  },
+  {
+    "name": "fulltext-rss",
+    "description": "FiveFilters Full-Text RSS - turns truncated feeds into full-content feeds",
+    "accessories": [],
+    "variables": [
+      "domain"
+    ]
+  },
+  {
+    "name": "rsshub",
+    "description": "RSSHub feed generator for sites without RSS (community route ecosystem)",
+    "accessories": [],
+    "variables": [
+      "domain"
+    ]
   }
 ]

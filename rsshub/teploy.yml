@@ -1,0 +1,12 @@
+# RSSHub — generates RSS feeds for sites that don't offer them.
+# Thousands of community routes (YouTube channels, GitHub activity, social
+# accounts, shops...). Memory cache; no accessories needed.
+app: rsshub
+domain: {{domain}}
+image: diygod/rsshub:latest
+port: 1200
+health:
+  path: /healthz
+  timeout_seconds: 90
+env:
+  CACHE_TYPE: memory
