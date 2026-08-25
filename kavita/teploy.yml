@@ -1,0 +1,13 @@
+# Kavita — self-hosted reading server for ebooks, comics, and manga.
+# Web reader (EPUB/PDF/CBZ/CBR), per-user progress, OPDS feeds for reading
+# apps. Put books into the kavita-books volume and add it as a library.
+app: kavita
+domain: {{domain}}
+image: ghcr.io/kareadita/kavita:latest
+port: 5000
+health:
+  path: /api/health
+  timeout_seconds: 90
+volumes:
+  config: /kavita/config
+  books: /books

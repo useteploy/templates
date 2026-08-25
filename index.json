@@ -123,5 +123,13 @@
     "variables": [
       "domain"
     ]
+  },
+  {
+    "name": "kavita",
+    "description": "Kavita ebook/comic/manga reading server (web reader, per-user progress, OPDS)",
+    "accessories": [],
+    "variables": [
+      "domain"
+    ]
   }
 ]
