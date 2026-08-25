@@ -104,5 +104,16 @@
       "nucleus"
     ],
     "variables": []
+  },
+  {
+    "name": "ghost",
+    "description": "Ghost publishing platform (blog, memberships, newsletter) with a MySQL 8 accessory",
+    "accessories": [
+      "mysql"
+    ],
+    "variables": [
+      "domain",
+      "db_password"
+    ]
   }
 ]
