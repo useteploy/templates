@@ -115,5 +115,13 @@
       "domain",
       "db_password"
     ]
+  },
+  {
+    "name": "syncthing",
+    "description": "Syncthing continuous device sync with the server as always-on peer (GUI behind the domain, sync on host port 22000)",
+    "accessories": [],
+    "variables": [
+      "domain"
+    ]
   }
 ]

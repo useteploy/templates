@@ -1,0 +1,17 @@
+# Syncthing — continuous folder sync between your devices, with this server
+# as the always-on peer (and offsite copy). The web GUI is served at the
+# domain; the sync protocol itself is published on host port 22000.
+# IMPORTANT: set a GUI password immediately after first visit (Settings > GUI),
+# or add a basic_auth gate under access: before deploying.
+app: syncthing
+domain: {{domain}}
+image: syncthing/syncthing:latest
+port: 8384
+publish:
+  - "0.0.0.0:22000:22000/tcp"
+  - "0.0.0.0:22000:22000/udp"
+health:
+  path: /
+  timeout_seconds: 60
+volumes:
+  data: /var/syncthing
