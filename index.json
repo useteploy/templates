@@ -96,5 +96,13 @@
     "variables": [
       "domain"
     ]
+  },
+  {
+    "name": "teploy-ship",
+    "description": "Self-hosted coding agent: issues in, verified pull requests out",
+    "accessories": [
+      "nucleus"
+    ],
+    "variables": []
   }
 ]
