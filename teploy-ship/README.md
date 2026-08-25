@@ -9,9 +9,7 @@ Issues in, verified pull requests out — the self-hosted coding agent.
 Deploys `ghcr.io/useteploy/teploy-ship:stable` (public; `stable` tracks the
 latest published release, v0.2.0 at the time of writing). Needs teploy CLI
 v0.1.29 or later — earlier versions leave the Nucleus data directory
-root-owned on first start and the accessory crash-loops. Use the default
-port for now: the image's web process listens on 7460 regardless of `--port`
-until Ship honours teploy's `PORT` env.
+root-owned on first start and the accessory crash-loops.
 
 ## After install
 

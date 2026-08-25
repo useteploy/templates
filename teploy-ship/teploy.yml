@@ -42,7 +42,7 @@ image: ghcr.io/useteploy/teploy-ship:stable
 memory: 1g
 
 processes:
-  web: web --store nucleus --port 7460
+  web: web --store nucleus
   worker: worker --store nucleus --interval 5
 
 accessories:
