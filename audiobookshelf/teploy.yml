@@ -1,0 +1,15 @@
+# Audiobookshelf — self-hosted audiobook and podcast server.
+# Podcast feeds are subscribed and auto-downloaded inside the app; audiobooks
+# go into the audiobookshelf-audiobooks volume. SQLite storage, no accessories.
+app: audiobookshelf
+domain: {{domain}}
+image: ghcr.io/advplyr/audiobookshelf:latest
+port: 80
+health:
+  path: /healthcheck
+  timeout_seconds: 90
+volumes:
+  config: /config
+  metadata: /metadata
+  audiobooks: /audiobooks
+  podcasts: /podcasts

@@ -80,5 +80,13 @@
     "variables": [
       "domain"
     ]
+  },
+  {
+    "name": "audiobookshelf",
+    "description": "Audiobookshelf audiobook and podcast server (position-syncing mobile apps, RSS auto-download)",
+    "accessories": [],
+    "variables": [
+      "domain"
+    ]
   }
-]\n
+]
