@@ -88,5 +88,13 @@
     "variables": [
       "domain"
     ]
+  },
+  {
+    "name": "actual-budget",
+    "description": "Actual Budget envelope-budgeting sync server (local-first, SimpleFIN bank sync optional)",
+    "accessories": [],
+    "variables": [
+      "domain"
+    ]
   }
 ]

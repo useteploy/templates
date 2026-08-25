@@ -1,0 +1,13 @@
+# Actual Budget — local-first envelope budgeting (sync server).
+# The server is a thin encrypted sync endpoint; budgets live in the clients.
+# SQLite storage in one volume, no accessories. First visit sets a server
+# password and creates your budget file.
+app: actual
+domain: {{domain}}
+image: actualbudget/actual-server:latest
+port: 5006
+health:
+  path: /
+  timeout_seconds: 60
+volumes:
+  data: /data
