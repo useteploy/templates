@@ -4,31 +4,14 @@ Issues in, verified pull requests out — the self-hosted coding agent.
 
 `teploy template install teploy-ship --server <name> [--port 7460]`
 
-## Status of this template
+## Image
 
-The template is complete and render-tested, but it deploys
-`ghcr.io/useteploy/teploy-ship:stable`, which is **not published yet** — the
-Ship repository is private and its first public release is pending. Until the
-image exists, `install` fails at the pull step.
-
-**Flip sequence (maintainers):** publish the image (`deploy/build-image.sh
---push` in the teploy-ship repo), add this entry to `index.json`, and
-redeploy teploy-site (its /ship page copy is committed and waiting —
-`teploy-site@3887f5d`):
-
-```json
-{
-  "name": "teploy-ship",
-  "description": "Self-hosted coding agent: issues in, verified pull requests out",
-  "accessories": ["nucleus"],
-  "variables": []
-}
-```
-
-The template directory ships ahead of the index entry deliberately:
-`teploy template info teploy-ship` works by direct fetch, so early adopters can
-read the shape, while `teploy template list` shows nothing that cannot yet
-install cleanly.
+Deploys `ghcr.io/useteploy/teploy-ship:stable` (public; `stable` tracks the
+latest published release, v0.2.0 at the time of writing). Needs teploy CLI
+v0.1.29 or later — earlier versions leave the Nucleus data directory
+root-owned on first start and the accessory crash-loops. Use the default
+port for now: the image's web process listens on 7460 regardless of `--port`
+until Ship honours teploy's `PORT` env.
 
 ## After install
 
