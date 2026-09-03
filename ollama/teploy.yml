@@ -1,0 +1,16 @@
+# Ollama standalone - the model runtime, no UI.
+# An API service, not a website: published on a raw host port (11434) with
+# no domain and no Caddy in front. It has NO authentication of its own -
+# keep it on the LAN or tailnet. Point clients at http://<host>:11434
+# (Open WebUI's OLLAMA_BASE_URL, editor plugins, agents, teploy-gateway).
+# Models persist on the volume; each pull is gigabytes.
+app: ollama
+domain: ""
+ingress: host
+port: 11434
+image: ollama/ollama:latest
+health:
+  path: /api/version
+  timeout_seconds: 60
+volumes:
+  ollama: /root/.ollama

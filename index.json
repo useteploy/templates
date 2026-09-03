@@ -163,5 +163,11 @@
     "variables": [
       "domain"
     ]
+  },
+  {
+    "name": "ollama",
+    "description": "Ollama standalone - the local model runtime as an API service (no UI, no auth: LAN/tailnet only)",
+    "accessories": [],
+    "variables": []
   }
 ]
