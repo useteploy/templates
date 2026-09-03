@@ -155,5 +155,13 @@
     "variables": [
       "domain"
     ]
+  },
+  {
+    "name": "open-webui",
+    "description": "Open WebUI with bundled Ollama - ChatGPT-style chat and local models on your own server (wants 8GB+ RAM, see README)",
+    "accessories": [],
+    "variables": [
+      "domain"
+    ]
   }
 ]

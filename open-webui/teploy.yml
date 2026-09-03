@@ -1,0 +1,18 @@
+# Open WebUI with bundled Ollama — ChatGPT on your own server.
+# The :ollama tag is the all-in-one image: the UI plus the local model
+# runtime in one container. Two volumes, both load-bearing: the app volume
+# holds accounts/chats/RAG data, the ollama volume holds the models
+# themselves (pulled at runtime from the in-app library, gigabytes each).
+# CPU-only on purpose: the GPU path needs the nvidia container toolkit and
+# the :ollama-cuda tag — see README.
+app: open-webui
+domain: {{domain}}
+image: ghcr.io/open-webui/open-webui:ollama
+port: 8080
+health:
+  path: /health
+  timeout_seconds: 120
+  interval_seconds: 5
+volumes:
+  open-webui: /app/backend/data
+  ollama: /root/.ollama
