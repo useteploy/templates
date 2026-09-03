@@ -169,5 +169,16 @@
     "description": "Ollama standalone - the local model runtime as an API service (no UI, no auth: LAN/tailnet only)",
     "accessories": [],
     "variables": []
+  },
+  {
+    "name": "lullmail",
+    "description": "Lull Mail - briefing-first mail client: screened senders, daily briefing, self-deriving work surfaces (Go + Postgres, AGPL)",
+    "accessories": [
+      "db"
+    ],
+    "variables": [
+      "domain",
+      "db_password"
+    ]
   }
 ]

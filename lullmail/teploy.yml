@@ -1,0 +1,27 @@
+# Lull Mail - briefing-first mail client (https://lullmail.com).
+# Public image on GHCR (built by the repo's CI), so this installs like any
+# other template. DATABASE_URL points at the postgres accessory by its
+# container alias (lullmail-db) and shares the db_password variable with it.
+# The setup token is generated on first boot and printed to the logs;
+# PUBLIC_URL stays unset and the origin is pinned from the setup visit.
+app: lullmail
+domain: {{domain}}
+image: ghcr.io/lullmail/lullmail:latest
+port: 8080
+health:
+  path: /health
+  timeout_seconds: 120
+env:
+  DATABASE_URL: postgres://lull:{{db_password}}@lullmail-db:5432/lullmail?sslmode=disable
+accessories:
+  db:
+    image: postgres:17
+    port: 5432
+    env:
+      POSTGRES_DB: lullmail
+      POSTGRES_USER: lull
+      POSTGRES_PASSWORD: {{db_password}}
+    volumes:
+      pgdata: /var/lib/postgresql/data
+volumes:
+  appdata: /app/data
