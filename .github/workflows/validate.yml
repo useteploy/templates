@@ -1,0 +1,23 @@
+name: Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "41 4 * * 1"
+  workflow_dispatch:
+
+jobs:
+  catalog:
+    name: Catalog structure and render-with-real-parser checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate index.json against the template files
+        run: python3 ci/validate.py
+      - name: Render every template through the actual Teploy parser
+        run: |
+          git clone --depth 1 https://github.com/useteploy/teploy-cli.git /tmp/teploy-cli
+          cd /tmp/teploy-cli
+          TEMPLATES_REPO_DIR="$GITHUB_WORKSPACE" go test ./internal/template/ -run TestRenderAllCatalogTemplates -v
