@@ -1,8 +1,8 @@
 # Home Assistant — open-source home automation.
 # IMPORTANT: HA rejects reverse-proxied requests until you trust the proxy.
-# After the first deploy, run the two commands in README.md (adds the http:
-# trusted_proxies block to configuration.yaml and restarts) — until then the
-# UI answers 400 Bad Request through the domain.
+# After first deploy, follow the version-specific proxy setup in README.md
+# (HTTP settings are in the UI on Home Assistant 2026.8+; older releases use
+# YAML). Until the proxy is trusted, the domain returns 400 Bad Request.
 app: homeassistant
 domain: {{domain}}
 image: ghcr.io/home-assistant/home-assistant:stable

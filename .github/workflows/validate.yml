@@ -10,14 +10,20 @@ on:
 
 jobs:
   catalog:
-    name: Catalog structure and render-with-real-parser checks
+    name: Catalog structure, documentation and real-parser checks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Validate index.json against the template files
-        run: python3 ci/validate.py
+        run: |
+          python3 ci/validate.py
+          python3 ci/validate_docs.py
+          python3 -m unittest discover -s ci -p 'test_*.py'
       - name: Render every template through the actual Teploy parser
         run: |
           git clone --depth 1 https://github.com/useteploy/teploy-cli.git /tmp/teploy-cli
+          python3 ci/validate_docs.py --cli-dir /tmp/teploy-cli --fixtures /tmp/templates-doc-fixtures.json
+          cp ci/docs_cli_test.go /tmp/teploy-cli/internal/cli/templates_docs_test.go
           cd /tmp/teploy-cli
+          TEMPLATES_DOC_FIXTURES=/tmp/templates-doc-fixtures.json go test ./internal/cli/ -run '^TestCatalogDocumentationAdmission$' -v
           TEMPLATES_REPO_DIR="$GITHUB_WORKSPACE" go test ./internal/template/ -run TestRenderAllCatalogTemplates -v

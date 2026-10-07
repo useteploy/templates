@@ -2,14 +2,15 @@
 #
 # One worker image, two processes: `web` (dashboard + webhook receivers) and
 # `worker` (executes durable runs — needs the model + git credentials).
-# Nucleus runs as an accessory on the app's private network (alias
-# `ship-nucleus`), so web and worker share one store and you can approve runs
-# from your laptop while the worker carries them.
+# Nucleus runs as an accessory on the shared `teploy` Docker bridge (alias
+# `ship-nucleus`), so web and worker share one store. Other Teploy apps on
+# that bridge can also reach it: deploy only mutually trusted workloads.
 #
 # No domain: `ingress: host` publishes the dashboard directly at
-# <server-ip>:7460 — the shape for a private/Tailnet box. Gate the port with
-# your firewall (e.g. `ufw allow from 100.64.0.0/10 to any port 7460` for
-# Tailscale-only access).
+# <server-ip>:7460 on ALL host interfaces by default. Installing Tailscale
+# or adding ordinary UFW rules does not make Docker-published ingress private.
+# Before install, use a tested upstream/Docker-aware firewall boundary, or
+# render a manifest and set an explicit loopback/Tailnet bind; see README.md.
 #
 # Install:
 #   teploy template install teploy-ship --server <name> [--port 7460]
@@ -55,9 +56,9 @@ accessories:
     # eviction runs first and the kernel cap is only the backstop.
     memory: 1500m
     env:
-      # Password auth is not usable in Nucleus yet; the accessory is only
-      # reachable on the app's private docker network. Same posture as every
-      # teploy app that ships a Nucleus accessory.
+      # Password auth is not usable in Nucleus yet. No host port is published,
+      # but every app/accessory on the shared `teploy` bridge can reach it.
+      # These no-auth settings require mutually trusted workloads on the host.
       NUCLEUS_ALLOW_NO_AUTH: "1"
       NUCLEUS_ALLOW_INSECURE_CLUSTER: "1"
       NUCLEUS_ALLOW_INSECURE_REPLICATION: "1"

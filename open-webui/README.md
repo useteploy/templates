@@ -4,7 +4,7 @@ ChatGPT-style chat, model library, and document RAG on your own server.
 The `:ollama` image bundles Ollama, so local models work out of the box —
 pull one from the in-app library and start chatting. Deploy:
 
-    teploy template install open-webui --server <name> --var domain=ai.example.com
+    teploy template install open-webui --server <name> --domain ai.example.com
 
 The first account created becomes the administrator.
 
@@ -18,10 +18,12 @@ each one is gigabytes, so give the disk room to grow.
 
 ## GPU
 
-The template deploys the CPU path. For NVIDIA, change the image tag to
-`:ollama-cuda` and ensure the nvidia container toolkit is installed on the
-host (`teploy exec <server> -- apt-get install -y nvidia-container-toolkit`
-or your distro's equivalent).
+The template deploys the CPU path with the current Teploy CLI. Changing the
+image tag and installing the NVIDIA Container Toolkit does not allocate a
+GPU: the CLI has no GPU request field and does not pass Docker's `--gpus`
+option. See [Open WebUI's quick start](https://docs.openwebui.com/getting-started/quick-start/)
+for the separate runtime and device-allocation requirements. Use a supported
+GPU runtime outside this template, or a future, tested CLI GPU feature.
 
 ## Alternatives it replaces
 

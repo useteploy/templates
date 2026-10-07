@@ -5,10 +5,14 @@ actually needs you; board/calendar/notes that derive themselves from your
 mail. One Go binary + Postgres, AGPL-3.0. Deploy:
 
     teploy template install lullmail --server <name> \
-      --var domain=mail.example.com --var db_password=$(openssl rand -hex 16)
+      --domain mail.example.com --var db_password=$(openssl rand -hex 16)
 
-First boot prints a one-time setup token to the logs (`teploy logs`):
-paste it in the browser, create your passkey, save the recovery codes.
+First boot prints a one-time setup token to the logs. Read them with the
+same server name used at install:
+
+    teploy logs --app lullmail --host <name>
+
+Paste the token in the browser, create your passkey, save the recovery codes.
 PUBLIC_URL stays unset - the origin is detected from the setup visit and
 pinned, so reach the app through its final domain when you run setup.
 

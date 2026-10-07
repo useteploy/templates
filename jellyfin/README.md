@@ -2,7 +2,7 @@
 
 Free software media server. Deploy:
 
-    teploy template install jellyfin --server <name> --var domain=media.example.com
+    teploy template install jellyfin --server <name> --domain media.example.com
 
 First visit runs the setup wizard (create your admin user there).
 

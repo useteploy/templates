@@ -3,7 +3,7 @@
 Continuous file sync between your devices, using this server as the
 always-on peer and offsite copy. Deploy:
 
-    teploy template install syncthing --server <name> --var domain=sync.example.com
+    teploy template install syncthing --server <name> --domain sync.example.com
 
 Then, immediately: open https://<domain>, go to Settings > GUI, and set a
 user and password - the GUI starts unauthenticated. (Or gate it up front by
