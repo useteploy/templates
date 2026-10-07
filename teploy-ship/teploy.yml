@@ -50,7 +50,7 @@ accessories:
   nucleus:
     # PINNED, not :latest — a storage engine is the last thing that should
     # change underneath you unannounced. Bump deliberately.
-    image: ghcr.io/neutron-build/nucleus:v0.1.8
+    image: ghcr.io/neutron-build/nucleus:v1.1.1
     port: 5432
     # Cgroup cap, set above the engine budget below so the engine's graceful
     # eviction runs first and the kernel cap is only the backstop.
