@@ -12,7 +12,10 @@ health:
   path: /health
   timeout_seconds: 120
 env:
-  DATABASE_URL: postgres://lull:{{db_password}}@lullmail-db:5432/lullmail?sslmode=disable
+  DATABASE_URL: postgres://lull@lullmail-db:5432/lullmail?sslmode=disable
+  # pgx reads PGPASSWORD when the DSN omits its password. Keep the supplied
+  # value separate so URI delimiters cannot alter connection authority.
+  PGPASSWORD: {{db_password}}
 accessories:
   db:
     image: postgres:17

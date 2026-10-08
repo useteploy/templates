@@ -96,3 +96,52 @@ and lifecycle defects in the upstream audit. No credential, image, port,
 volume, ingress or other runtime manifest values were changed by this pass.
 Live install/upgrade/backup/restore, network isolation and GPU acceptance
 remain untested and require a disposable target with representative data.
+
+
+## 2026-10-07 implementation reconciliation (unpublished working tree)
+
+Supersedes the previous addendum's TPL-01/TPL-03 open implementation status:
+TPL-01 now declares WordPress `/var/www/html` as a managed volume and provides
+an existing-data migration/rollback procedure in `wordpress/README.md`.
+TPL-03 separates Lullmail PGPASSWORD from the password-free DATABASE_URL,
+using the application's existing pgx environment support. Real CLI fetch,
+substitution and config-parser consumer tests assert password equality,
+connection authority, and WordPress persistence. The pgx parser test verifies
+URI delimiters remain password bytes. CI now consumes an immutable CLI SHA
+from `ci/cli.pin`, rather than moving main.
+
+TPL-02 and TSEM-01/-02/-04/-05/-06/-07 documentation corrections remain
+implemented; updated admission fixtures cover 19 READMEs and 30 commands.
+TSEM-03 supplied sentinel/password semantics are owned by the CLI renderer
+and literal environment resolver. Consumer validation also uses the CLI
+team's immutable corrected source snapshot; adopting its published commit
+into the release pin remains a release integration step. CLI-08/-09 and
+CLI lifecycle findings remain owned by the CLI lane.
+
+Floating application images, string-list variables, CPU-only GPU support,
+and the documented shared bridge boundary are deliberate current product
+contracts. They are not claimed as digest pinning, typed variables, GPU
+allocation or network isolation. Live WordPress migration and application
+install/backup/restore require a disposable target with representative data;
+structural and command admission tests do not execute those operations.
+
+## CLI receipt qualification after independent review
+
+The earlier `176e5da5…` source snapshot consumer runs are historical evidence.
+Independent review found nine material gaps; CLI fix-r3 is active. That snapshot
+is not a final release candidate or proof of current CLI integration. Keep
+`ci/cli.pin` at honest immutable `9939eaf` until the parent lands and supplies the
+revised final commit/receipt, then rerun consumers before adopting it. Preserve
+PlanRecord2 and env_literal additive contracts. Live/runtime gates remain held.
+
+## 2026-10-07 r4 consumer qualification
+
+All eleven inherited candidate paths are preserved. Catalog and documentation
+checks cover 20 manifests, 19 README examples, 30 commands and nine Python
+regressions. These are source admission checks. No live WordPress migration,
+application install/upgrade/backup/restore, or native Nucleus acceptance is
+claimed. Old CLI consumer runs are historical after subsequent producer edits.
+The 544 source snapshot is likewise historical during trigger-fix-r5. Public
+ci/cli.pin remains truthful 9939eaf until an accepted immutable public producer
+artifact exists and consumers rerun. PlanRecord2/env_literal/volume_ownership
+are mandatory additive integration contracts; no provisional wire is adopted.

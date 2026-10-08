@@ -7,6 +7,10 @@ mail. One Go binary + Postgres, AGPL-3.0. Deploy:
     teploy template install lullmail --server <name> \
       --domain mail.example.com --var db_password=$(openssl rand -hex 16)
 
+DATABASE_URL carries the database host and user; PGPASSWORD supplies the same
+password used by the PostgreSQL accessory. Keeping the password out of the URI
+preserves characters such as `#`, `/`, `?` and `%` without URL escaping.
+
 First boot prints a one-time setup token to the logs. Read them with the
 same server name used at install:
 

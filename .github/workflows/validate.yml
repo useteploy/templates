@@ -21,9 +21,16 @@ jobs:
           python3 -m unittest discover -s ci -p 'test_*.py'
       - name: Render every template through the actual Teploy parser
         run: |
-          git clone --depth 1 https://github.com/useteploy/teploy-cli.git /tmp/teploy-cli
+          CLI_PIN=$(cat ci/cli.pin)
+          test "${#CLI_PIN}" -eq 40
+          git init /tmp/teploy-cli
+          git -C /tmp/teploy-cli remote add origin https://github.com/useteploy/teploy-cli.git
+          git -C /tmp/teploy-cli fetch --depth 1 origin "$CLI_PIN"
+          git -C /tmp/teploy-cli checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/teploy-cli rev-parse HEAD)" = "$CLI_PIN"
           python3 ci/validate_docs.py --cli-dir /tmp/teploy-cli --fixtures /tmp/templates-doc-fixtures.json
           cp ci/docs_cli_test.go /tmp/teploy-cli/internal/cli/templates_docs_test.go
+          cp ci/consumer_cli_test.go /tmp/teploy-cli/internal/template/catalog_consumer_test.go
           cd /tmp/teploy-cli
           TEMPLATES_DOC_FIXTURES=/tmp/templates-doc-fixtures.json go test ./internal/cli/ -run '^TestCatalogDocumentationAdmission$' -v
-          TEMPLATES_REPO_DIR="$GITHUB_WORKSPACE" go test ./internal/template/ -run TestRenderAllCatalogTemplates -v
+          TEMPLATES_REPO_DIR="$GITHUB_WORKSPACE" go test ./internal/template/ -run 'TestRenderAllCatalogTemplates|TestCatalogConnectionAndPersistenceConsumers' -v

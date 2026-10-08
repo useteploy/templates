@@ -23,7 +23,7 @@ class DocumentationRegressionTests(unittest.TestCase):
 
     def test_current_documentation(self):
         result = validate_docs.validate(self.root)
-        self.assertEqual(len(result['cases']), 29)
+        self.assertEqual(len(result['cases']), 30)
         self.assertIn('server: my-server', result['backup_manifest'])
         # Shell quoting must preserve a complete remote command as one argument.
         cp = next(c for c in result['cases'] if c['args'][-1].startswith('cp -p '))
@@ -42,7 +42,7 @@ class DocumentationRegressionTests(unittest.TestCase):
                     validate_docs.validate(self.root)
                 path.write_text(original)
                 checked += 1
-        self.assertEqual(checked, 16)
+        self.assertEqual(checked, 17)
 
     def test_invalid_accessory_backup_flag(self):
         self.change('docs/BACKUPS.md', 'teploy accessory backup db',

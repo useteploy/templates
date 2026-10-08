@@ -128,7 +128,7 @@ and outside version control. For an existing one-step installation:
 | nextcloud | data (/var/www/html) | db (postgres); redis (Valkey) is cache-only | use upstream maintenance/backup procedure |
 | paperless-ngx | data, media, export | db (postgres); redis (Valkey) | documents live in media; export dir is the migration path |
 | postgres-admin | — | db (postgres) | back up via the db accessory only |
-| wordpress | **none configured** | db (mysql) | database dump excludes uploads/plugins/themes; current template's anonymous WordPress volume needs a separate consistent backup and a deliberate persistence migration before redeploy (TPL-01 remains open) |
+| wordpress | wordpress (`/var/www/html`) | db (mysql) | database dump plus the WordPress volume; stop writers for a consistent pair. Existing installations must migrate their anonymous volume before adopting the managed mount; see `wordpress/README.md`. |
 | ghost | content (images/themes) | db (mysql) | posts in db; uploads in content |
 | lullmail | appdata | db (postgres) | mail state in db dump + appdata |
 | teploy-ship | ship-data | nucleus (generic volume archive, not pg_dump) | both stores needed; coordinate writes and test engine recovery |

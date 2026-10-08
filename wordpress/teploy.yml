@@ -2,6 +2,9 @@ app: wordpress
 domain: {{domain}}
 image: wordpress:latest
 port: 80
+# Preserve uploads, plugins, themes and installation files across versions.
+volumes:
+  wordpress: /var/www/html
 env:
   WORDPRESS_DB_HOST: wordpress-db
   WORDPRESS_DB_NAME: wordpress

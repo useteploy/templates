@@ -82,7 +82,7 @@ def validate(root):
             raise AssertionError(f'Unreviewed command example: {case}')
     expected = {p.parent.name for p in root.glob('*/README.md')}
     assert installs == expected, (installs, expected)
-    assert len(installs) == 18, 'Update the expected README coverage when catalog docs change'
+    assert len(installs) == 19, 'Update the expected README coverage when catalog docs change'
     all_readmes = '\n'.join(p.read_text() for p in root.glob('*/README.md'))
     assert '--var domain=' not in all_readmes
     assert 'teploy app restart' not in all_readmes
@@ -99,7 +99,10 @@ def validate(root):
     assert 'backup --accessory' not in backup
     assert 'BACKUP ONLY: never run deploy/apply' in backup
     assert 'does **not** save' in backup and 'Do not\n  re-render' in backup
-    assert 'TPL-01 remains open' in backup
+    assert 'Existing installations must migrate' in backup
+    wordpress = (root / 'wordpress/teploy.yml').read_text()
+    assert 'wordpress: /var/www/html' in wordpress
+    assert 'Docker does not copy' in (root / 'wordpress/README.md').read_text()
     assert 'nucleus (generic volume archive, not pg_dump)' in backup
     ha = (root / 'home-assistant/README.md').read_text()
     assert '2026.8 and newer' in ha and 'Older releases using YAML' in ha
@@ -168,7 +171,7 @@ def main():
         check_source(args.cli_dir)
     if args.fixtures:
         args.fixtures.write_text(json.dumps(fixtures, indent=2) + '\n')
-    print(f'docs ok: 18 README install examples; {len(fixtures["cases"])} total commands'
+    print(f'docs ok: 19 README install examples; {len(fixtures["cases"])} total commands'
           + ('; CLI source contracts checked' if args.cli_dir else ''))
 
 
