@@ -9,7 +9,7 @@ Before installing, establish the network boundary described below. Then:
 ## Image
 
 Deploys `ghcr.io/useteploy/teploy-ship:stable` (public; `stable` tracks the
-latest published release, v0.2.0 at the time of writing). Needs teploy CLI
+latest published release, v0.3.0 at the time of writing). Needs teploy CLI
 v0.1.29 or later — earlier versions leave accessory data directories
 root-owned on first start and the accessory crash-loops.
 
