@@ -175,3 +175,22 @@ catalog default is a proven database.
   `ci/test_validate_docs.py`, and teploy-cli's TestRenderAllCatalogTemplates
   against this checkout (incl. hostile db_password) all pass. Live install,
   upgrade-from-nucleus, and backup/restore remain untested here.
+
+## 2026-10-15 — ci/cli.pin bumped to the v0.1.41 producer
+
+Closes the consumer-test red that main has carried since at least the
+2026-10-12 scheduled run (catalog_consumer_test.go:56 "password changed
+between consumers"). Root cause: the pinned CLI (9939eaf) substituted user
+variables BEFORE consuming `generate` sentinels, so a db_password literally
+named "generate" became a sentinel and each consumer got a different random
+secret. teploy-cli fixed the ordering ("Generate only directives supplied by
+the template, before user literals", template.go:173) and it shipped in the
+v0.1.41 release merge — the "accepted immutable public producer artifact"
+the 2026-10-07 note was waiting for. Pin now points at that merge
+(70c7cbd082839f110f570268720014ca3abd061); both
+TestCatalogConnectionAndPersistenceConsumers and TestRenderAllCatalogTemplates
+verified green against it before bumping.
+
+Same push carries the teploy-ship postgres flip (see the 2026-10-14 entry):
+ship v0.3.0 is published and `stable` serves it, so the release gate is
+satisfied and the catalog default is now public.
