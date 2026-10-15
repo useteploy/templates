@@ -103,7 +103,7 @@ def validate(root):
     wordpress = (root / 'wordpress/teploy.yml').read_text()
     assert 'wordpress: /var/www/html' in wordpress
     assert 'Docker does not copy' in (root / 'wordpress/README.md').read_text()
-    assert 'nucleus (generic volume archive, not pg_dump)' in backup
+    assert 'postgres (engine-aware pg_dump)' in backup
     ha = (root / 'home-assistant/README.md').read_text()
     assert '2026.8 and newer' in ha and 'Older releases using YAML' in ha
     assert 'within five minutes' in ha

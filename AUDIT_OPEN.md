@@ -145,3 +145,33 @@ The 544 source snapshot is likewise historical during trigger-fix-r5. Public
 ci/cli.pin remains truthful 9939eaf until an accepted immutable public producer
 artifact exists and consumers rerun. PlanRecord2/env_literal/volume_ownership
 are mandatory additive integration contracts; no provisional wire is adopted.
+
+## 2026-10-14 — teploy-ship default store: Nucleus → PostgreSQL (unpublished working tree)
+
+Rationale: the pinned Nucleus v1.1.1 has two confirmed live defects on the
+operator's production store (rows that stop decoding after an ALTER ADD while
+the migration ledger records success; RSS growth past the configured limit
+that wedges the engine — see teploy-ship `_internal/UPSTREAM_BUGS.md`
+2026-09-24 / recurrence 2026-10-12). Until the engine is fixed upstream, the
+catalog default is a proven database.
+
+- `teploy-ship/teploy.yml`: accessory is now `pgvector/pgvector:0.8.0-pg17`
+  (official pgvector build of Postgres 17, pinned, password auth, no host
+  port); app processes run `--store postgres`; DSN + `PGPASSWORD` follow the
+  TPL-03 lullmail pattern so hostile `db_password` values cannot alter
+  connection authority. `index.json` declares `postgres` + `db_password`.
+- pgvector keeps the optional code-index embeddings available (pgvector DDL
+  and `<=>` operators in teploy-ship ≥ this change); without SHIP_EMBED_MODEL
+  nothing vector-related runs.
+- `docs/BACKUPS.md` + `ci/validate_docs.py`: the ship row and its contract
+  now assert `postgres (engine-aware pg_dump)` — the CLI's backup dispatch
+  already recognizes PostgreSQL images.
+- RELEASE GATE: the rendered manifest passes `--store postgres` to
+  `ghcr.io/useteploy/teploy-ship:stable`, which the CURRENT stable (v0.2.0)
+  rejects. This tree must not be published before a teploy-ship release that
+  carries the postgres store ships and `stable` points at it. An early merge
+  fails fast and visibly (unknown --store), not silently.
+- Validation: `ci/validate.py`, `ci/validate_docs.py`,
+  `ci/test_validate_docs.py`, and teploy-cli's TestRenderAllCatalogTemplates
+  against this checkout (incl. hostile db_password) all pass. Live install,
+  upgrade-from-nucleus, and backup/restore remain untested here.

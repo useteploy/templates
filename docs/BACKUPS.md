@@ -102,7 +102,7 @@ and outside version control. For an existing one-step installation:
 
        teploy accessory backup db --bucket <bucket> --region <region>
 
-   Replace `db` with the real key (for example `nucleus`), and remember that
+   Replace `db` with the real key (for example `postgres`), and remember that
    unrecognized engines receive a generic archive, not an engine-aware dump.
 3. For apps with managed app volumes, take the file backup in the same
    consistency window:
@@ -131,7 +131,7 @@ and outside version control. For an existing one-step installation:
 | wordpress | wordpress (`/var/www/html`) | db (mysql) | database dump plus the WordPress volume; stop writers for a consistent pair. Existing installations must migrate their anonymous volume before adopting the managed mount; see `wordpress/README.md`. |
 | ghost | content (images/themes) | db (mysql) | posts in db; uploads in content |
 | lullmail | appdata | db (postgres) | mail state in db dump + appdata |
-| teploy-ship | ship-data | nucleus (generic volume archive, not pg_dump) | both stores needed; coordinate writes and test engine recovery |
+| teploy-ship | ship-data | postgres (engine-aware pg_dump) | both stores needed; coordinate writes and test engine recovery |
 | vaultwarden | data (encrypted vault) | — | preserve database and attachments consistently |
 | home-assistant | config | — | includes configuration and recorder database; quiesce writes |
 | jellyfin | config, cache, media | — | config/database and media matter; cache is rebuildable |

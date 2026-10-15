@@ -2,9 +2,10 @@
 #
 # One worker image, two processes: `web` (dashboard + webhook receivers) and
 # `worker` (executes durable runs — needs the model + git credentials).
-# Nucleus runs as an accessory on the shared `teploy` Docker bridge (alias
-# `ship-nucleus`), so web and worker share one store. Other Teploy apps on
-# that bridge can also reach it: deploy only mutually trusted workloads.
+# PostgreSQL runs as an accessory on the shared `teploy` Docker bridge (alias
+# `ship-postgres`), so web and worker share one store. The image is the
+# official pgvector build of postgres 17, so the optional code-index
+# embeddings (SHIP_EMBED_MODEL) work unchanged when enabled.
 #
 # No domain: `ingress: host` publishes the dashboard directly at
 # <server-ip>:7460 on ALL host interfaces by default. Installing Tailscale
@@ -14,6 +15,10 @@
 #
 # Install:
 #   teploy template install teploy-ship --server <name> [--port 7460]
+#
+# One variable is prompted at install:
+#   db_password          the PostgreSQL accessory password (keep it; a
+#                        restore or a manual psql needs it)
 #
 # Three secrets are generated at install and printed ONCE (save them):
 #   SHIP_WEB_TOKEN       dashboard login + API bearer
@@ -43,31 +48,33 @@ image: ghcr.io/useteploy/teploy-ship:stable
 memory: 1g
 
 processes:
-  web: web --store nucleus
-  worker: worker --store nucleus --interval 5
+  web: web --store postgres
+  worker: worker --store postgres --interval 5
 
 accessories:
-  nucleus:
+  postgres:
     # PINNED, not :latest — a storage engine is the last thing that should
-    # change underneath you unannounced. Bump deliberately.
-    image: ghcr.io/neutron-build/nucleus:v1.1.1
+    # change underneath you unannounced. Bump deliberately (within-pg17
+    # pgvector releases are low-risk; a pg major bump is an upgrade path,
+    # pg_dump/restore, not a redeploy).
+    image: pgvector/pgvector:0.8.0-pg17
     port: 5432
-    # Cgroup cap, set above the engine budget below so the engine's graceful
-    # eviction runs first and the kernel cap is only the backstop.
-    memory: 1500m
+    # Cgroup cap — generous for Ship's volume; a postgres OOM-kill means
+    # crash recovery on next start, so keep headroom rather than trim it.
+    memory: 1g
     env:
-      # Password auth is not usable in Nucleus yet. No host port is published,
-      # but every app/accessory on the shared `teploy` bridge can reach it.
-      # These no-auth settings require mutually trusted workloads on the host.
-      NUCLEUS_ALLOW_NO_AUTH: "1"
-      NUCLEUS_ALLOW_INSECURE_CLUSTER: "1"
-      NUCLEUS_ALLOW_INSECURE_REPLICATION: "1"
-      NUCLEUS_MAX_MEMORY_MB: "1024"
+      POSTGRES_DB: ship
+      POSTGRES_USER: ship
+      POSTGRES_PASSWORD: "{{db_password}}"
     volumes:
-      nucleus-data: /data
+      pgdata: /var/lib/postgresql/data
 
 env:
-  NUCLEUS_URL: postgres://nucleus@ship-nucleus:5432/nucleus
+  # The store DSN. The password rides PGPASSWORD (read by the same client
+  # library) so URI delimiters in db_password cannot alter the connection's
+  # authority — same posture as the lullmail template.
+  NUCLEUS_URL: postgres://ship@ship-postgres:5432/ship?sslmode=disable
+  PGPASSWORD: "{{db_password}}"
   SHIP_MODEL: anthropic/claude-sonnet-5
   SHIP_WEB_TOKEN: generate
   SHIP_WEBHOOK_SECRET: generate
