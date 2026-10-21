@@ -139,8 +139,5 @@ and outside version control. For an existing one-step installation:
 | kavita | config, books | — | library files + config/database |
 | syncthing | data (/var/syncthing) | — | includes device identities/keys and synced files |
 | actual-budget | data | — | includes server settings/account database and budget files |
-| freshrss | data (SQLite), extensions | — | use a database-consistent copy |
 | open-webui | open-webui (app data), ollama (models) | — | app database needs consistency; model files are re-downloadable |
 | ollama | ollama (models + config) | — | models re-downloadable; preserve configuration |
-| rsshub | — | — | stateless (cache in-container) |
-| fulltext-rss | — | — | stateless |

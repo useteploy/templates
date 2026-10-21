@@ -82,7 +82,7 @@ def validate(root):
             raise AssertionError(f'Unreviewed command example: {case}')
     expected = {p.parent.name for p in root.glob('*/README.md')}
     assert installs == expected, (installs, expected)
-    assert len(installs) == 19, 'Update the expected README coverage when catalog docs change'
+    assert len(installs) == 16, 'Update the expected README coverage when catalog docs change'
     all_readmes = '\n'.join(p.read_text() for p in root.glob('*/README.md'))
     assert '--var domain=' not in all_readmes
     assert 'teploy app restart' not in all_readmes
@@ -171,7 +171,8 @@ def main():
         check_source(args.cli_dir)
     if args.fixtures:
         args.fixtures.write_text(json.dumps(fixtures, indent=2) + '\n')
-    print(f'docs ok: 19 README install examples; {len(fixtures["cases"])} total commands'
+    n_installs = sum(1 for c in fixtures['cases'] if c['args'][:2] == ['template', 'install'])
+    print(f'docs ok: {n_installs} README install examples; {len(fixtures["cases"])} total commands'
           + ('; CLI source contracts checked' if args.cli_dir else ''))
 
 

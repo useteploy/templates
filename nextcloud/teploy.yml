@@ -3,7 +3,11 @@
 # NEXTCLOUD_ADMIN_PASSWORD is generated at install and printed ONCE.
 app: nextcloud
 domain: {{domain}}
-image: nextcloud:apache
+# PINNED, not floating — nextcloud:apache bundles its own PHP, and this
+# digest ships PHP 8.5.12 (verified 2026-10-21, matching the catalog's
+# PHP target). Floating `apache` would silently move the PHP runtime on
+# app updates. Bump deliberately: check `php -v` in the new tag first.
+image: nextcloud:apache@sha256:3f05f4d5eded9d3d029e617926500645cca6344710364737a374088f6811095a
 port: 80
 health:
   path: /status.php

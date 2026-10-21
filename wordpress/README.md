@@ -1,5 +1,11 @@
 # WordPress
 
+The image is digest-pinned to a `php8.5-apache` build so the PHP runtime
+is explicit and operator-chosen (PHP 8.5.12 as of the 2026-10-21 pin;
+see the comment in `teploy.yml` for the bump procedure). The bundled
+WordPress core only seeds an empty volume — an existing install in the
+managed volume keeps its own core version and is not force-upgraded.
+
 The template persists MySQL data and the whole `/var/www/html` directory in
 managed volumes. Back up both together: the database dump alone excludes
 uploads, plugins and themes. Use a password containing only hexadecimal

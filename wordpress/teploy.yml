@@ -1,6 +1,11 @@
 app: wordpress
 domain: {{domain}}
-image: wordpress:latest
+# PINNED, not floating — WordPress is the catalog's PHP surface with
+# upstream PHP-version tags, so the PHP runtime is an operator decision,
+# not a side effect of an app-image float. 2026-10-21: php8.5-apache at
+# this digest ships PHP 8.5.12. To bump: pull the tag elsewhere, confirm
+# `php -v` inside it, then pin the new digest here in the same change.
+image: wordpress:php8.5-apache@sha256:574ea6f58239fba5fc95fe22e03683777259534498ab8e0ea3f6f176a9d620d1
 port: 80
 # Preserve uploads, plugins, themes and installation files across versions.
 volumes:

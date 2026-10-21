@@ -194,3 +194,66 @@ verified green against it before bumping.
 Same push carries the teploy-ship postgres flip (see the 2026-10-14 entry):
 ship v0.3.0 is published and `stable` serves it, so the release gate is
 satisfied and the catalog default is now public.
+
+## 2026-10-21 — PHP runtime pinning across the catalog (operator directive)
+
+Operator directive: PHP-serving templates should run PHP 8.5.12, and the
+production WordPress sites on deploy-ovh must match. Verified every
+catalog app with a bundled PHP interpreter by running `php -v` inside the
+exact pinned tag:
+
+- `wordpress/teploy.yml`: now digest-pinned
+  `wordpress:php8.5-apache@sha256:574ea6f5…20d1` (ships PHP 8.5.12,
+  built 2026-10-21). WordPress is the one upstream with PHP-version
+  tags, so the runtime is now an explicit operator decision. Partially
+  narrows deferred item useteploy__templates-01 (this image no longer
+  floats; the rest of the catalog contract is unchanged).
+- `nextcloud/teploy.yml`: now digest-pinned
+  `nextcloud:apache@sha256:3f05f4d5…095a` (bundles PHP 8.5.12). Same
+  rationale; also narrows templates-01 for this image.
+- `freshrss`, `postgres-admin` (Adminer): upstream images bundle their
+  own PHP with **no** version-selectable tags — measured 8.4.27 in both
+  on 2026-10-21. Documented in the manifests; no pin change (nothing to
+  pin toward 8.5 — a pin would freeze 8.4.27, which is still actively
+  patched upstream).
+- **NEW OPEN ITEM — fulltext-rss:** `heussd/fivefilters-full-text-rss`
+  (only tags: `latest` = 3.8.1, still rebuilt 2026-10-18) bundles
+  **PHP 5.6.40, EOL since Jan 2019**. No newer-PHP upstream tag exists
+  (FiveFilters 4.x is PHP 8-native but has no community image). Warning
+  added to the manifest and README. Decision needed: accept the EOL
+  runtime (tailnet-only use), drop the template, or maintain a custom
+  PHP 8 image. Not silently decided here.
+
+Production: the three WordPress apps on deploy-ovh (tylerswebpage,
+rallah, lightimals; previously wordpress@…8f337df, PHP 8.3.29) were
+recreated on the pinned 8.5.12 image with volumes, network, ports,
+labels and names preserved. Rollback containers were kept temporarily
+and removed 2026-10-21 after re-verification (all three domains 200);
+the old PHP 8.3.29 image is still on the host if a rollback image is
+ever needed. wordpress-shared-mysql is unchanged.
+
+Validation: `ci/validate.py` and `ci/validate_docs.py` pass after the
+manifest/README edits.
+
+## 2026-10-21 — RSS templates removed from the catalog
+
+Operator decision: the fleet runs no catalog RSS app (omi-rss is a
+first-party deployment outside the catalog), and the catalog's RSS
+offerings carried the worst runtime in it. Removed from this repo:
+
+- `freshrss` (bundled PHP 8.4.27, no upstream PHP-version control)
+- `fulltext-rss` (bundled **PHP 5.6.40, EOL 2019** — closes the open
+  decision above: dropped rather than accepted, replaced, or custom-
+  built)
+- `rsshub` (Node, removed for scope: no RSS offerings without a
+  first-party reason to keep them)
+
+`index.json` entries, `docs/BACKUPS.md` backup-scope rows, and the
+template directories are deleted in the same change; catalog count
+20 → 17. Regression counts in `ci/` were updated to match (README
+coverage 19 → 16, command cases 30 → 27, domain-flag READMEs 17 → 14);
+`ci/validate.py`, `ci/validate_docs.py` and `ci/test_validate_docs.py`
+all pass. No server in the fleet had any of the three deployed, so no
+production action was needed. Adminer (postgres-admin) still bundles
+PHP 8.4.27 with no version control upstream — documented in its
+manifest, unchanged.
