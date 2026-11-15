@@ -1,0 +1,22 @@
+# libteca - one media server for movies, TV, music, audiobooks, podcasts,
+# books, comics and games, with its own web player. Also speaks the
+# Jellyfin, Audiobookshelf, OPDS and Subsonic protocols.
+# Published on a raw host port (8096) with no domain and no Caddy in front:
+# keep it on a LAN or tailnet. See README.md before install.
+# The administrator is created from admin_password on the first start only;
+# the value is ignored once any user exists.
+# Transcoding is software-only here: the format has no device mapping.
+app: libteca
+domain: ""
+ingress: host
+port: 8096
+image: ghcr.io/libteca/libteca:stable
+health:
+  path: /healthcheck
+  timeout_seconds: 60
+env:
+  LIBTECA_HWACCEL: auto
+  LIBTECA_INIT_ADMIN: "admin:{{admin_password}}"
+volumes:
+  data: /data
+  media: /media

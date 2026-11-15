@@ -158,5 +158,13 @@
       "domain",
       "db_password"
     ]
+  },
+  {
+    "name": "libteca",
+    "description": "libteca media server for movies, TV, music, audiobooks, podcasts, books, comics and games (LAN/tailnet only)",
+    "accessories": [],
+    "variables": [
+      "admin_password"
+    ]
   }
 ]
