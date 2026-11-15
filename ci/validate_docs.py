@@ -82,7 +82,7 @@ def validate(root):
             raise AssertionError(f'Unreviewed command example: {case}')
     expected = {p.parent.name for p in root.glob('*/README.md')}
     assert installs == expected, (installs, expected)
-    assert len(installs) == 16, 'Update the expected README coverage when catalog docs change'
+    assert len(installs) == 17, 'Update the expected README coverage when catalog docs change'
     all_readmes = '\n'.join(p.read_text() for p in root.glob('*/README.md'))
     assert '--var domain=' not in all_readmes
     assert 'teploy app restart' not in all_readmes

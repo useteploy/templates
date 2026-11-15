@@ -23,7 +23,7 @@ class DocumentationRegressionTests(unittest.TestCase):
 
     def test_current_documentation(self):
         result = validate_docs.validate(self.root)
-        self.assertEqual(len(result['cases']), 27)
+        self.assertEqual(len(result['cases']), 28)
         self.assertIn('server: my-server', result['backup_manifest'])
         # Shell quoting must preserve a complete remote command as one argument.
         cp = next(c for c in result['cases'] if c['args'][-1].startswith('cp -p '))
