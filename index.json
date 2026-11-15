@@ -150,7 +150,7 @@
   },
   {
     "name": "lullmail",
-    "description": "Lull Mail - briefing-first mail client: screened senders, daily briefing, self-deriving work surfaces (Go + Postgres, AGPL)",
+    "description": "Lull Mail - briefing-first mail client: screened senders, daily briefing, self-deriving work surfaces (Go + Postgres, FSL-1.1-MIT)",
     "accessories": [
       "db"
     ],
