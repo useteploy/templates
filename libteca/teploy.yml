@@ -20,3 +20,8 @@ env:
 volumes:
   data: /data
   media: /media
+volume_ownership:
+  data:
+    uid: 10001
+    gid: 10001
+    mode: "0700"
